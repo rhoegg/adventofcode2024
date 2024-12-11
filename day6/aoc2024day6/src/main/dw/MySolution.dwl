@@ -73,10 +73,11 @@ fun findLoops(m: Map, history: CheckHistory = emptyHistory): Array<Point> = do {
     var finished = outOfBounds(nextPosition, m.dimensions)
     ---
     if (finished) history.found
-    // else if (sizeOf(history.previousSteps) > 40) history.found
+    else if (sizeOf(history.previousSteps) > 830) history.found
     else do {
         var newObstacle = nextPosition
-        var foundNewLoop = if (history.checked contains newObstacle) false
+        var foundNewLoop = 
+            if (history.checked contains newObstacle) false
             else isLoop(m update {
                 case o at .obstacles -> o << newObstacle
             }, history.previousSteps)
@@ -105,7 +106,9 @@ fun isLoop(m: Map, previousSteps: Array<Cursor>): Boolean = do {
     var exited = outOfBounds(nextPosition, m.dimensions)
     ---
     if (exited) false
-    else if (previousSteps contains m.start) true
+    else if (
+        ((sizeOf(previousSteps) mod 50) == 0) // don't check every step
+        and (previousSteps contains m.start)) true
     else do {
         var nextStart = if (m.obstacles contains nextPosition) 
                 m.start update {
@@ -119,5 +122,69 @@ fun isLoop(m: Map, previousSteps: Array<Cursor>): Boolean = do {
         }
         ---
         isLoop(nextMap, previousSteps << m.start)
+    }
+}
+
+fun findLoops2(m: Map) = do {
+    var deadline = log("deadline", now() + |PT7M|)
+    @TailRec()
+    fun walk(m: Map, g: Cursor, visited: Array<Cursor> = []): Array<Cursor> = do {
+        var guardForward = step(g.position, g.direction)
+        var finished = outOfBounds(guardForward, m.dimensions)
+        var expired = if (now() > deadline or sizeOf(visited) > 10000) do {
+                var forLog = log("terminated with trail length:", sizeOf(visited))
+                ---
+                true
+            } else false
+        var nextGuard = if (finished) g
+            else if (m.obstacles contains guardForward) g update {
+                    case .direction -> turnRight(g.direction)
+                }
+            else g update {
+                case .position -> guardForward
+            }
+        var nextVisited = if (m.obstacles contains guardForward) visited
+            else visited << g
+        ---
+        if (finished or expired) visited << g
+        else walk(m, nextGuard, nextVisited)
+    }
+    var guardPath = walk(m, m.start)
+    var guardTrails = guardPath reduce (step, trails = []) -> do {
+        var nextTrail = (trails[-1] default []) << step
+        ---
+        trails << nextTrail
+    }
+    ---
+    (guardTrails drop 1) reduce (trail: Array<Cursor>, state = {checkedObstacles: [], loops: 0}) -> do {
+        var cursor = trail[-1]
+        var nextStep = step(cursor.position, cursor.direction)
+        var alreadyChecked = state.checkedObstacles contains nextStep
+        var facingObstacle = m.obstacles contains nextStep
+        var expired = if (now() > deadline) do {
+            var forLog = log("deadline exceeded on step", sizeOf(trail))
+            ---
+            true
+        } else false
+        ---
+        if (alreadyChecked or facingObstacle or expired) {
+            checkedObstacles: state.checkedObstacles,
+            loops: state.loops
+        } else do { // check for new loop
+            var newObstacle = nextStep
+            var obstaclesToCheck = m.obstacles << newObstacle
+            var mapToCheck = m  update {
+                case .obstacles -> obstaclesToCheck
+                case .start -> cursor // start facing the obstacle
+            }
+            // var foundLoop = isLoop(mapToCheck, trail)
+            // including the cached trail reduced the time from 389s to 240s but also overcounted loops (?!)
+            var foundLoop = isLoop(mapToCheck, [])
+            ---
+            {
+                checkedObstacles: state.checkedObstacles << newObstacle,
+                loops: state.loops + (if (foundLoop) 1 else 0)
+            }
+        }
     }
 }
