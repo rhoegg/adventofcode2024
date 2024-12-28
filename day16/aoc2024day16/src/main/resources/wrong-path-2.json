@@ -1,0 +1,170 @@
+[
+    {
+      "location": {
+        "x": 1,
+        "y": 15
+      },
+      "direction": "E"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 15
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 14
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 13
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 13
+      },
+      "direction": "E"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 13
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 12
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 11
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 10
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 9
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 8
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 7
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 6
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 5
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 4
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 3
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 3
+      },
+      "direction": "E"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 3
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 2
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 1
+      },
+      "direction": "N"
+    },
+    {
+      "location": {
+        "x": 1,
+        "y": 1
+      },
+      "direction": "E"
+    },
+    {
+      "location": {
+        "x": 2,
+        "y": 1
+      },
+      "direction": "E"
+    },
+    {
+      "location": {
+        "x": 3,
+        "y": 1
+      },
+      "direction": "E"
+    },
+    {
+      "location": {
+        "x": 3,
+        "y": 1
+      },
+      "direction": "S"
+    }
+  ]
