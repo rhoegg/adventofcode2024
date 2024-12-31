@@ -1,4 +1,5 @@
 %dw 2.0
+import drop, take from dw::core::Arrays
 import mergeWith from dw::core::Objects
 import lines from dw::core::Strings
 
@@ -44,3 +45,12 @@ fun findTrios(nodes: Object, nodeFilter: (String) -> Boolean) = do {
 
 fun toString(group: Trio): String =
     (valuesOf(group) orderBy $) joinBy "-"
+
+fun bronKerbosch(nodes: Object, r: Array<String>, p: Array<String>, x: Array<String>) = 
+    if (isEmpty(p) and isEmpty(x)) [r]
+    else if (isEmpty(p)) []
+    else (0 to sizeOf(p) - 1) reduce (i, cliques=[]) -> do {
+        cliques ++ bronKerbosch(nodes, r << p[i], 
+            (p drop i) filter (n) -> nodes[p[i]] contains n,
+            (p take i) filter (n) -> nodes[p[i]] contains n)
+    }
