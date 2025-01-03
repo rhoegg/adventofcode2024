@@ -119,3 +119,66 @@ fun countCombos(design: String, patterns: Array<String>, state = {prefixStack: [
         countCombos(design, patterns, {prefixStack: newStack, combos: state.combos + countFromCache, cache: newCache})
     }
 }
+
+fun countTowelCombos(patterns: Array<String>, design: String, cache = {}): {combinations: Number, cache: Object} =
+    countCombos2(patterns, [{
+        design: design,
+        combinations: 0,
+        suffixes: [design]
+    }], {combinations: 0, cache: cache})
+
+type TowelDesign = {
+    design: String,
+    combinations: Number,
+    // one per matching pattern, with the pattern removed
+    suffixes: Array<String>
+}
+
+@TailRec()
+fun countCombos2(patterns: Array<String>, designStack: Array<TowelDesign>, state: {combinations: Number, cache: Object}): {combinations: Number, cache: Object} =
+    if (isEmpty(designStack)) state
+    else do {
+        var thisDesignInfo = designStack[0]
+        var poppedStack = designStack drop 1
+        var nextStack = if (isEmpty(thisDesignInfo.suffixes)) do { // this is the moment where a design is fully counted
+            if (isEmpty(poppedStack)) [] // last one
+            else do {
+                var parentDesignInfo = poppedStack[0]
+                var doublePoppedStack = poppedStack drop 1
+                var updatedDesignInfo = parentDesignInfo update {
+                    case c at .combinations -> c + thisDesignInfo.combinations
+                }
+                ---
+                updatedDesignInfo >> doublePoppedStack
+            }
+        } else do {
+                var firstDesign = thisDesignInfo.suffixes[0]
+                var nextDesignInfo = thisDesignInfo update {
+                    case s at .suffixes -> s drop 1
+                }
+                
+                var suffixDesignInfo: TowelDesign = if (state.cache[firstDesign]?) {
+                    design: firstDesign,
+                    combinations: state.cache[firstDesign],
+                    suffixes: []
+                } else do {
+                    var usefulPatterns = if (isEmpty(firstDesign)) [] 
+                        // this will include the case when the design is one of the patterns
+                        else patterns filter (pattern) -> firstDesign startsWith pattern
+                    ---
+                    {
+                        design: firstDesign,
+                        combinations: if (isEmpty(firstDesign)) 1 else 0,
+                        suffixes: usefulPatterns map (pattern) -> firstDesign substringAfter pattern
+                    }
+                }
+                ---
+                suffixDesignInfo >> (nextDesignInfo >> poppedStack)
+            }
+        var nextState = if (isEmpty(thisDesignInfo.suffixes)) {
+            combinations: thisDesignInfo.combinations,
+            cache: state.cache ++ {(thisDesignInfo.design): thisDesignInfo.combinations}
+        } else state // only incrementing combinations when we finish something
+        ---
+        countCombos2(patterns, nextStack, nextState)
+    }

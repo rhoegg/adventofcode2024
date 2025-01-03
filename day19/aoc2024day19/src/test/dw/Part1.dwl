@@ -8,9 +8,9 @@ import * from dw::util::Timer
 var sampleChallenge = parseChallenge(sampleInput)
 var challenge = parseChallenge(rawInput)
 
-var results = challenge.designs map (design) -> {
+var results = sampleChallenge.designs map (design) -> {
     design: design,
-    possible: possible3([design], challenge.patterns).result
+    possible: possible3([design], sampleChallenge.patterns).result
 }
 // var patterns2 = challenge.patterns ++ (challenge.patterns flatMap (p) -> challenge.patterns map (p2) -> p ++ p2)
 ---
