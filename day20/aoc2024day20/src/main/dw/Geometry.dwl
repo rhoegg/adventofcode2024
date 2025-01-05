@@ -14,3 +14,6 @@ fun inBounds(p: Point, d: Dimensions): Boolean =
     p.x >= 0 and p.x < d.width and p.y >= 0 and p.y < d.height
 
 fun toString(p: Point): String = "$(p.x),$(p.y)"
+
+fun manhattanDistance(p1: Point, p2: Point): Number = 
+    abs(p1.x - p2.x) + abs(p1.y - p2.y)

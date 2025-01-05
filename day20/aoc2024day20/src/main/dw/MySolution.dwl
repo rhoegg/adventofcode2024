@@ -69,7 +69,6 @@ fun raceTime(racetrack: RaceTrack, elapsed = 0, visited: Array<Point> = []): Num
 fun race(racetrack: RaceTrack, elapsed: Number = 0, visited: Array<Point> = []): { elapsed: Number, visited: Array<Point> } = 
     if (racetrack.start == racetrack.end) { elapsed: elapsed, visited: visited }
     else do {
-        // can branch here for the cheat
         var options = directions map (d) -> step(racetrack.start, d)
         var nextValidStep = options firstWith (p) -> 
             inBounds(p, racetrack.dimensions) 
